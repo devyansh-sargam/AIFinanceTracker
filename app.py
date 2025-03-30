@@ -25,57 +25,183 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS
+# Custom CSS with animations and dark mode
 st.markdown("""
 <style>
+    /* Dark mode & glow effects */
     .block-container {
         padding-top: 2rem;
         padding-bottom: 2rem;
+        animation: fadeIn 0.8s ease-in-out;
     }
     .main .block-container {
         max-width: 100%;
         padding-left: 2rem;
         padding-right: 2rem;
     }
+    
+    /* Animations */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes glowing {
+        0% { box-shadow: 0 0 5px rgba(0, 230, 118, 0.5); }
+        50% { box-shadow: 0 0 20px rgba(0, 230, 118, 0.8); }
+        100% { box-shadow: 0 0 5px rgba(0, 230, 118, 0.5); }
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    
+    @keyframes slideIn {
+        from { transform: translateX(-20px); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    
+    /* Headings with glow */
     h1, h2, h3 {
-        color: #4CAF50;
+        color: #00E676 !important;
+        text-shadow: 0 0 10px rgba(0, 230, 118, 0.5);
+        animation: fadeIn 1s ease-in-out;
     }
+    
+    /* Button styling with glow and animation */
     .stButton>button {
-        background-color: #4CAF50;
-        color: white;
-        font-weight: bold;
-        border: none;
-        padding: 0.5rem 1rem;
-        border-radius: 0.3rem;
-        transition: all 0.3s;
+        background-color: #00E676 !important;
+        color: #121212 !important;
+        font-weight: bold !important;
+        border: none !important;
+        padding: 0.5rem 1rem !important;
+        border-radius: 0.3rem !important;
+        transition: all 0.3s !important;
+        animation: glowing 2s infinite !important;
     }
+    
     .stButton>button:hover {
-        background-color: #45a049;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        background-color: #00C853 !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 0 15px rgba(0, 230, 118, 0.8) !important;
     }
-    .css-1aumxhk {
-        background-color: #f1f8e9;
-        border-radius: 10px;
-        padding: 1rem;
-        margin-bottom: 1rem;
+    
+    /* Card styling */
+    .css-1aumxhk, div.stDataFrame, div.stMarkdown {
+        background-color: #1E1E1E !important;
+        border-radius: 10px !important;
+        padding: 1rem !important;
+        margin-bottom: 1rem !important;
+        border: 1px solid #333333 !important;
+        animation: fadeIn 0.5s ease-in-out;
+        transition: all 0.3s ease;
     }
+    
+    .css-1aumxhk:hover, div.stDataFrame:hover {
+        box-shadow: 0 0 15px rgba(0, 230, 118, 0.3) !important;
+        transform: translateY(-2px);
+    }
+    
+    /* Sidebar styling */
+    section[data-testid="stSidebar"] {
+        background-color: #1a1a1a !important;
+        border-right: 1px solid #333333 !important;
+    }
+    
+    section[data-testid="stSidebar"] .block-container {
+        animation: slideIn 0.5s ease-in-out;
+    }
+    
+    /* Navigation */
+    div.stRadio > div {
+        background-color: #1E1E1E !important;
+        border-radius: 5px !important;
+        padding: 0.5rem !important;
+        margin-bottom: 0.5rem !important;
+        transition: all 0.3s ease;
+    }
+    
+    div.stRadio > div:hover {
+        background-color: #2a2a2a !important;
+        box-shadow: 0 0 10px rgba(0, 230, 118, 0.3) !important;
+    }
+    
     /* Card-like styling for dataframes */
     .dataframe {
         border: none !important;
         border-radius: 0.5rem !important;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05) !important;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2) !important;
+        background-color: #1E1E1E !important;
+        color: #FFFFFF !important;
+        animation: fadeIn 0.8s ease-in-out;
     }
+    
     .dataframe thead th {
-        background-color: #e8f5e9 !important;
-        color: #2e7d32 !important;
+        background-color: #2a2a2a !important;
+        color: #00E676 !important;
         font-weight: 600 !important;
+        border-bottom: 2px solid #00E676 !important;
     }
+    
     .dataframe tbody tr:nth-child(even) {
-        background-color: #f9f9f9 !important;
+        background-color: #252525 !important;
     }
-    /* Progress bar styling */
+    
+    .dataframe tbody tr:hover {
+        background-color: #333333 !important;
+    }
+    
+    /* Progress bar styling with animation */
     .stProgress > div > div > div > div {
-        background-color: #4CAF50;
+        background-color: #00E676 !important;
+        background: linear-gradient(90deg, #00E676, #00C853) !important;
+        animation: pulse 2s infinite !important;
+    }
+    
+    /* Input fields */
+    .stTextInput > div > div > input, .stNumberInput > div > div > input, .stDateInput > div > div > input {
+        background-color: #2a2a2a !important;
+        color: #FFFFFF !important;
+        border: 1px solid #333333 !important;
+        border-radius: 5px !important;
+    }
+    
+    .stTextInput > div > div > input:focus, .stNumberInput > div > div > input:focus, .stDateInput > div > div > input:focus {
+        border: 1px solid #00E676 !important;
+        box-shadow: 0 0 10px rgba(0, 230, 118, 0.3) !important;
+    }
+    
+    /* Select boxes */
+    .stSelectbox > div > div > div {
+        background-color: #2a2a2a !important;
+        color: #FFFFFF !important;
+        border: 1px solid #333333 !important;
+    }
+    
+    /* Plots and charts */
+    .js-plotly-plot, .plotly, .plot-container {
+        animation: fadeIn 1s ease-in-out;
+    }
+    
+    /* Info boxes */
+    div.stInfo {
+        background-color: rgba(0, 230, 118, 0.1) !important;
+        border: 1px solid #00E676 !important;
+        border-radius: 10px !important;
+        animation: glowing 3s infinite !important;
+    }
+    
+    /* Warning/Error colors */
+    .red-text {
+        color: #FF5252 !important;
+        text-shadow: 0 0 10px rgba(255, 82, 82, 0.5);
+    }
+    
+    .yellow-text {
+        color: #FFD740 !important;
+        text-shadow: 0 0 10px rgba(255, 215, 64, 0.5);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -99,8 +225,16 @@ if "financial_insights" not in st.session_state:
 if "current_page" not in st.session_state:
     st.session_state.current_page = "Dashboard"
 
-# App title
-st.sidebar.title("AI Finance Assistant")
+# App title with animation and glow effect
+st.sidebar.markdown("""
+<div style="animation: fadeIn 1.5s ease-in-out;">
+    <h1 style="color: #00E676; text-shadow: 0 0 15px rgba(0, 230, 118, 0.8); margin-bottom: 0.5rem;">
+        <span style="display: inline-block; animation: pulse 2s infinite;">💰</span> 
+        AI Finance Assistant
+    </h1>
+    <p style="color: rgba(255,255,255,0.8); font-style: italic; margin-top: 0;">Your smart money manager</p>
+</div>
+""", unsafe_allow_html=True)
 
 # Navigation
 pages = {
@@ -138,11 +272,11 @@ if st.session_state.budgets:
         remaining = total_budget - total_expenses
         st.sidebar.markdown(f"**Remaining Budget:** ${remaining:.2f}")
         
-        # Color code remaining budget
+        # Color code remaining budget with glow effects
         if remaining < 0:
-            st.sidebar.markdown(f"<span style='color:red'>You've exceeded your budget!</span>", unsafe_allow_html=True)
+            st.sidebar.markdown(f"<span class='red-text' style='animation: pulse 2s infinite;'>⚠️ You've exceeded your budget!</span>", unsafe_allow_html=True)
         elif remaining < (total_budget * 0.2):
-            st.sidebar.markdown(f"<span style='color:orange'>Budget running low!</span>", unsafe_allow_html=True)
+            st.sidebar.markdown(f"<span class='yellow-text' style='animation: pulse 2s infinite;'>⚠️ Budget running low!</span>", unsafe_allow_html=True)
 
 # Link to save/load data
 st.sidebar.markdown("---")
