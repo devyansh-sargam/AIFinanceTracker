@@ -11,6 +11,12 @@ from components.budget import show_budget
 from components.insights import show_insights
 from components.goals import show_goals
 
+# Import database utilities
+from utils.database import (
+    init_db, get_all_expenses, get_all_budgets, 
+    get_all_goals, get_insights, export_data, import_data
+)
+
 # App configuration
 st.set_page_config(
     page_title="AI Finance Assistant",
@@ -19,18 +25,76 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# Custom CSS
+st.markdown("""
+<style>
+    .block-container {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+    }
+    .main .block-container {
+        max-width: 100%;
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+    h1, h2, h3 {
+        color: #4CAF50;
+    }
+    .stButton>button {
+        background-color: #4CAF50;
+        color: white;
+        font-weight: bold;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.3rem;
+        transition: all 0.3s;
+    }
+    .stButton>button:hover {
+        background-color: #45a049;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    .css-1aumxhk {
+        background-color: #f1f8e9;
+        border-radius: 10px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+    /* Card-like styling for dataframes */
+    .dataframe {
+        border: none !important;
+        border-radius: 0.5rem !important;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05) !important;
+    }
+    .dataframe thead th {
+        background-color: #e8f5e9 !important;
+        color: #2e7d32 !important;
+        font-weight: 600 !important;
+    }
+    .dataframe tbody tr:nth-child(even) {
+        background-color: #f9f9f9 !important;
+    }
+    /* Progress bar styling */
+    .stProgress > div > div > div > div {
+        background-color: #4CAF50;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# Initialize database
+init_db()
+
 # Initialize session state
 if "expenses" not in st.session_state:
-    st.session_state.expenses = []
+    st.session_state.expenses = get_all_expenses()
     
 if "budgets" not in st.session_state:
-    st.session_state.budgets = {}
+    st.session_state.budgets = get_all_budgets()
     
 if "goals" not in st.session_state:
-    st.session_state.goals = []
+    st.session_state.goals = get_all_goals()
     
 if "financial_insights" not in st.session_state:
-    st.session_state.financial_insights = []
+    st.session_state.financial_insights = get_insights()
     
 if "current_page" not in st.session_state:
     st.session_state.current_page = "Dashboard"
@@ -57,12 +121,14 @@ st.sidebar.markdown("---")
 current_date = datetime.now().strftime("%B %d, %Y")
 st.sidebar.markdown(f"**Today:** {current_date}")
 
-# Display total expenses and budgets in sidebar
+# Calculate totals for sidebar display
+total_expenses = 0
 if st.session_state.expenses:
     total_expenses = sum(float(expense["amount"]) for expense in st.session_state.expenses)
     st.sidebar.markdown(f"**Total Expenses:** ${total_expenses:.2f}")
 
 # Show total budget
+total_budget = 0
 if st.session_state.budgets:
     total_budget = sum(float(budget) for budget in st.session_state.budgets.values())
     st.sidebar.markdown(f"**Total Budget:** ${total_budget:.2f}")
@@ -83,13 +149,9 @@ st.sidebar.markdown("---")
 st.sidebar.markdown("### Data Management")
 
 # Save data functionality
-if st.sidebar.button("Save Data"):
-    data = {
-        "expenses": st.session_state.expenses,
-        "budgets": st.session_state.budgets,
-        "goals": st.session_state.goals,
-        "insights": st.session_state.financial_insights
-    }
+if st.sidebar.button("Export Data"):
+    # Export data from the database
+    data = export_data()
     
     st.sidebar.download_button(
         label="Download Finance Data",
@@ -100,17 +162,21 @@ if st.sidebar.button("Save Data"):
     st.sidebar.success("Data ready for download!")
 
 # Load data functionality
-uploaded_file = st.sidebar.file_uploader("Upload saved data", type=["json"])
+uploaded_file = st.sidebar.file_uploader("Import saved data", type=["json"])
 if uploaded_file is not None:
     try:
         data = json.load(uploaded_file)
-        st.session_state.expenses = data.get("expenses", [])
-        st.session_state.budgets = data.get("budgets", {})
-        st.session_state.goals = data.get("goals", [])
-        st.session_state.financial_insights = data.get("insights", [])
-        st.sidebar.success("Data loaded successfully!")
+        # Import data to the database
+        if import_data(data):
+            # Refresh session state
+            st.session_state.expenses = get_all_expenses()
+            st.session_state.budgets = get_all_budgets()
+            st.session_state.goals = get_all_goals()
+            st.session_state.financial_insights = get_insights()
+            st.sidebar.success("Data imported successfully!")
+            st.rerun()
     except Exception as e:
-        st.sidebar.error(f"Error loading data: {e}")
+        st.sidebar.error(f"Error importing data: {e}")
 
 # Information
 st.sidebar.markdown("---")
