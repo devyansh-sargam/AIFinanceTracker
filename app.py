@@ -10,12 +10,16 @@ from components.expenses import show_expenses
 from components.budget import show_budget
 from components.insights import show_insights
 from components.goals import show_goals
+from components.login import show_login_page
 
 # Import database utilities
 from utils.database import (
     init_db, get_all_expenses, get_all_budgets, 
     get_all_goals, get_insights, export_data, import_data
 )
+
+# Import authentication utilities
+from utils.auth import clerk_auth, initialize_auth, show_user_profile, logout_button
 
 # App configuration
 st.set_page_config(
@@ -316,5 +320,21 @@ if uploaded_file is not None:
 st.sidebar.markdown("---")
 st.sidebar.info("This is an AI-powered personal finance assistant. Track expenses, set budgets, and get personalized financial insights.")
 
-# Render selected page
-pages[selected_page]()
+# Initialize authentication
+initialize_auth()
+
+# Check authentication
+is_authenticated = clerk_auth()
+
+# Handle authentication flow
+if is_authenticated:
+    # Show user profile in sidebar if authenticated
+    st.sidebar.markdown("### Your Profile")
+    show_user_profile()
+    logout_button()
+    
+    # Render selected page
+    pages[selected_page]()
+else:
+    # Show login page if not authenticated
+    show_login_page()

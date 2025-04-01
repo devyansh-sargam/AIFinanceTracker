@@ -11,4 +11,5 @@ dependencies = [
     "sqlalchemy>=2.0.40",
     "streamlit-extras>=0.6.0",
     "streamlit>=1.44.0",
+    "extra-streamlit-components>=0.1.71",
 ]
