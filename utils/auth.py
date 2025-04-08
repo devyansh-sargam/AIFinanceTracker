@@ -30,29 +30,35 @@ def clerk_auth():
     """
     initialize_auth()
     
-    cookie_manager = stx.CookieManager()
-    clerk_token = cookie_manager.get(cookie="__clerk_session_jwt")
+    # Check for demo login first (session state already set)
+    if st.session_state.authenticated and st.session_state.user_id == "demo_user_id":
+        return True
     
-    # If we have a token and are not authenticated, set authenticated to True
-    if clerk_token and not st.session_state.authenticated:
-        st.session_state.authenticated = True
-        # In a real implementation, you would decode and verify the JWT here
-        # and retrieve real user data
+    # Try Clerk authentication if API keys are available
+    if CLERK_PUBLISHABLE_KEY and CLERK_SECRET_KEY:
+        cookie_manager = stx.CookieManager()
+        clerk_token = cookie_manager.get(cookie="__clerk_session_jwt")
         
-        # For demonstration purposes, we'll set default values
-        if not st.session_state.user_id:
-            st.session_state.user_id = "demo_user_id"
-        if not st.session_state.user_name:
-            st.session_state.user_name = "Demo User"
-        if not st.session_state.user_email:
-            st.session_state.user_email = "demo@example.com"
-    
-    # If we don't have a token but are authenticated, set authenticated to False
-    elif not clerk_token and st.session_state.authenticated:
-        st.session_state.authenticated = False
-        st.session_state.user_id = None
-        st.session_state.user_name = None
-        st.session_state.user_email = None
+        # If we have a token and are not authenticated, set authenticated to True
+        if clerk_token and not st.session_state.authenticated:
+            st.session_state.authenticated = True
+            # In a real implementation, you would decode and verify the JWT here
+            # and retrieve real user data
+            
+            # For demonstration purposes, we'll set default values
+            if not st.session_state.user_id:
+                st.session_state.user_id = "clerk_user_id"
+            if not st.session_state.user_name:
+                st.session_state.user_name = "Clerk User"
+            if not st.session_state.user_email:
+                st.session_state.user_email = "clerk_user@example.com"
+        
+        # If we don't have a token but are authenticated, set authenticated to False
+        elif not clerk_token and st.session_state.authenticated and st.session_state.user_id != "demo_user_id":
+            st.session_state.authenticated = False
+            st.session_state.user_id = None
+            st.session_state.user_name = None
+            st.session_state.user_email = None
     
     return st.session_state.authenticated
 
