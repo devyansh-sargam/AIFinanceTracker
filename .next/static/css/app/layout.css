@@ -78,6 +78,9 @@
 .collapse {
   visibility: collapse;
 }
+.visible {
+  visibility: visible;
+}
 .absolute {
   position: absolute;
 }
@@ -102,6 +105,12 @@
 .z-10 {
   z-index: 10;
 }
+.\!container {
+  width: 100% !important;
+}
+.container {
+  width: 100%;
+}
 .mx-auto {
   margin-inline: auto;
 }
@@ -119,6 +128,9 @@
 }
 .hidden {
   display: none;
+}
+.inline {
+  display: inline;
 }
 .inline-block {
   display: inline-block;
@@ -216,6 +228,12 @@
 }
 .text-transparent {
   color: transparent;
+}
+.lowercase {
+  text-transform: lowercase;
+}
+.uppercase {
+  text-transform: uppercase;
 }
 .italic {
   font-style: italic;
