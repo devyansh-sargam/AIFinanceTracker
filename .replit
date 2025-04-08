@@ -1,4 +1,4 @@
-modules = ["python-3.11"]
+modules = ["python-3.11", "nodejs-20"]
 
 [nix]
 channel = "stable-24_05"
@@ -17,26 +17,15 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Finance Assistant Server"
+args = "Download Server"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Download Server"
-
-[[workflows.workflow]]
-name = "Finance Assistant Server"
-author = "agent"
-
-[workflows.workflow.metadata]
-agentRequireRestartOnSave = false
+args = "Next.js Finance App"
 
 [[workflows.workflow.tasks]]
-task = "packager.installForAll"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "streamlit run app.py --server.port 5000"
-waitForPort = 5000
+task = "workflow.run"
+args = "Database Setup"
 
 [[workflows.workflow]]
 name = "Download Server"
@@ -52,6 +41,35 @@ task = "packager.installForAll"
 task = "shell.exec"
 args = "cd download && python -m http.server 5001"
 waitForPort = 5001
+
+[[workflows.workflow]]
+name = "Next.js Finance App"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd . && npx next dev -p 5000"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Database Setup"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd . && npx prisma db push"
 
 [[ports]]
 localPort = 5000
