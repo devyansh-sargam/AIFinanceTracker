@@ -68,24 +68,86 @@ def show_dashboard():
     days_passed = min(today.day, days_in_month)
     daily_avg = month_total / days_passed if days_passed > 0 else 0
     
-    # Display metrics
+    # Display enhanced metrics with animations and effects
     with col1:
-        st.metric("Total Expenses", f"${total_expenses:.2f}")
+        # Total Expenses Card
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-card-shimmer"></div>
+            <div class="metric-card-content">
+                <div class="metric-label">Total Expenses</div>
+                <div class="metric-value">${total_expenses:.2f}</div>
+            </div>
+            <div class="metric-icon">💰</div>
+        </div>
+        """, unsafe_allow_html=True)
     
     with col2:
-        st.metric(f"{current_month} Expenses", f"${month_total:.2f}")
+        # Monthly Expenses Card
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-card-shimmer"></div>
+            <div class="metric-card-content">
+                <div class="metric-label">{current_month} Expenses</div>
+                <div class="metric-value">${month_total:.2f}</div>
+            </div>
+            <div class="metric-icon">📅</div>
+        </div>
+        """, unsafe_allow_html=True)
     
     with col3:
-        st.metric("Daily Average", f"${daily_avg:.2f}")
+        # Daily Average Card
+        st.markdown(f"""
+        <div class="metric-card">
+            <div class="metric-card-shimmer"></div>
+            <div class="metric-card-content">
+                <div class="metric-label">Daily Average</div>
+                <div class="metric-value">${daily_avg:.2f}</div>
+            </div>
+            <div class="metric-icon">📊</div>
+        </div>
+        """, unsafe_allow_html=True)
     
     with col4:
         # Calculate remaining budget if budgets exist
         if st.session_state.budgets:
             total_budget = sum(float(budget) for budget in st.session_state.budgets.values())
             remaining = total_budget - month_total
-            st.metric("Remaining Budget", f"${remaining:.2f}", delta=None)
+            
+            # Choose icon and color based on remaining amount
+            if remaining < 0:
+                icon = "⚠️"
+                color_class = "danger"
+            elif remaining < (total_budget * 0.2):
+                icon = "⚠️"
+                color_class = "warning"
+            else:
+                icon = "✅"
+                color_class = "success"
+                
+            # Remaining Budget Card
+            st.markdown(f"""
+            <div class="metric-card">
+                <div class="metric-card-shimmer"></div>
+                <div class="metric-card-content">
+                    <div class="metric-label">Remaining Budget</div>
+                    <div class="metric-value">${remaining:.2f}</div>
+                </div>
+                <div class="metric-icon">{icon}</div>
+            </div>
+            """, unsafe_allow_html=True)
         else:
-            st.metric("Transactions", f"{len(st.session_state.expenses)}")
+            # Transactions Card
+            st.markdown(f"""
+            <div class="metric-card">
+                <div class="metric-card-shimmer"></div>
+                <div class="metric-card-content">
+                    <div class="metric-label">Transactions</div>
+                    <div class="metric-value">{len(st.session_state.expenses)}</div>
+                </div>
+                <div class="metric-icon">🧾</div>
+            </div>
+            """, unsafe_allow_html=True)
     
     # Charts section
     st.markdown("---")
