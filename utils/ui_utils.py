@@ -278,13 +278,75 @@ def hover_effect(element_id):
     """, unsafe_allow_html=True)
 
 def smooth_scroll():
-    """Add smooth scrolling to the page."""
+    """Add smooth scrolling to the page and detect scrolling for scrollbar effects."""
     st.markdown("""
     <style>
     html {
         scroll-behavior: smooth;
     }
     </style>
+    
+    <script>
+    // Add scroll detection for improved scrollbar effects
+    document.addEventListener('DOMContentLoaded', function() {
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                document.body.classList.add('scrolled');
+            } else {
+                document.body.classList.remove('scrolled');
+            }
+        });
+        
+        // Add hover effects to interactive elements
+        document.querySelectorAll('.stButton button').forEach(function(button) {
+            button.addEventListener('mouseover', function() {
+                this.style.transform = 'translateY(-3px)';
+                this.style.boxShadow = '0 10px 20px rgba(0, 230, 118, 0.3)';
+            });
+            
+            button.addEventListener('mouseout', function() {
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = '0 5px 10px rgba(0, 230, 118, 0.1)';
+            });
+            
+            button.addEventListener('mousedown', function() {
+                this.style.transform = 'translateY(-1px)';
+            });
+            
+            button.addEventListener('mouseup', function() {
+                this.style.transform = 'translateY(-3px)';
+            });
+        });
+        
+        // Add hover effects to chart elements
+        document.querySelectorAll('.js-plotly-plot').forEach(function(chart) {
+            chart.addEventListener('mouseover', function() {
+                this.style.transform = 'translateY(-5px)';
+                this.style.boxShadow = '0 15px 30px rgba(0, 0, 0, 0.2), 0 0 30px rgba(0, 230, 118, 0.2)';
+            });
+            
+            chart.addEventListener('mouseout', function() {
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.1)';
+            });
+        });
+        
+        // Add shine effect to cards on hover
+        document.querySelectorAll('.metric-card, .animated-card').forEach(function(card) {
+            card.addEventListener('mousemove', function(e) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                this.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(0, 230, 118, 0.1), transparent 50%), rgba(30, 30, 30, 0.7)`;
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.background = 'rgba(30, 30, 30, 0.7)';
+            });
+        });
+    });
+    </script>
     """, unsafe_allow_html=True)
 
 def get_local_image(image_path):
