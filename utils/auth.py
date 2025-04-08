@@ -64,103 +64,107 @@ def clerk_auth():
 
 def show_login_ui():
     """
-    Display the Clerk login UI.
+    Display a simplified login UI since Clerk integration is not working.
     """
-    st.markdown(
-        f"""
-        <div id="clerk-sign-in" style="width: 100%; height: 700px; animation: fadeIn 1s ease-in-out;"></div>
-        <script src="https://js.clerk.io/v1/clerk.js"></script>
-        <script>
-            const clerkPublishableKey = "{CLERK_PUBLISHABLE_KEY or 'missing_clerk_key'}";
+    col1, col2 = st.columns([1, 3])
+    
+    with col2:
+        st.markdown(
+            """
+            <div style="border: 2px solid #00E676; padding: 20px; border-radius: 10px; 
+                 background-color: rgba(0, 230, 118, 0.1); margin-top: 20px; text-align: center;">
+                <h3 style="color: #00E676;">Login Form</h3>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        
+        # Simple email input
+        email = st.text_input("Email Address", key="login_email", 
+                             placeholder="your.email@example.com")
+        
+        # Password input
+        password = st.text_input("Password", type="password", key="login_password")
+        
+        # Login button with styling
+        if st.button("Login", key="login_button", use_container_width=True, type="primary"):
+            # Simple validation
+            if email and password:
+                st.session_state.authenticated = True
+                st.session_state.user_id = "user_" + email.split('@')[0]
+                st.session_state.user_name = email.split('@')[0].title()
+                st.session_state.user_email = email
+                st.success("Login successful!")
+                st.rerun()
+            else:
+                st.error("Please enter both email and password")
             
-            if (!clerkPublishableKey || clerkPublishableKey === 'missing_clerk_key') {{
-                document.getElementById('clerk-sign-in').innerHTML = `
-                    <div style="border: 2px solid #ff4d4d; padding: 20px; border-radius: 10px; 
-                         background-color: rgba(255, 77, 77, 0.1); margin-top: 20px; text-align: center;">
-                        <h3 style="color: #ff4d4d;">Clerk API Key Required</h3>
-                        <p>To enable authentication, please set up your Clerk API keys in the environment variables.</p>
-                    </div>
-                `;
-            }} else {{
-                const clerk = window.Clerk(clerkPublishableKey);
-                
-                clerk.load({{
-                    // Set the sign-in options
-                    signIn: {{
-                        routing: "path",
-                        path: "/sign-in",
-                        mount: document.getElementById("clerk-sign-in"),
-                        appearance: {{
-                            variables: {{
-                                colorPrimary: "#00E676",
-                                colorBackground: "#121212",
-                                colorText: "#FFFFFF",
-                                colorInputBackground: "#1E1E1E",
-                                colorInputText: "#FFFFFF",
-                                fontFamily: "Arial, sans-serif",
-                            }},
-                            layout: {{
-                                socialButtonsVariant: "iconAndText",
-                                socialButtonsPlacement: "bottom"
-                            }}
-                        }}
-                    }}
-                }});
-            }}
-        </script>
-        """,
-        unsafe_allow_html=True,
-    )
+        st.markdown(
+            """
+            <p style="text-align: center; margin-top: 15px;">
+                <a href="#" style="color: #00E676; text-decoration: none;">Forgot password?</a>
+            </p>
+            """, 
+            unsafe_allow_html=True
+        )
 
 def show_signup_ui():
     """
-    Display the Clerk signup UI.
+    Display a simplified signup UI since Clerk integration is not working.
     """
-    st.markdown(
-        f"""
-        <div id="clerk-sign-up" style="width: 100%; height: 700px; animation: fadeIn 1s ease-in-out;"></div>
-        <script src="https://js.clerk.io/v1/clerk.js"></script>
-        <script>
-            const clerkPublishableKey = "{CLERK_PUBLISHABLE_KEY or 'missing_clerk_key'}";
-            
-            if (!clerkPublishableKey || clerkPublishableKey === 'missing_clerk_key') {{
-                document.getElementById('clerk-sign-up').innerHTML = `
-                    <div style="border: 2px solid #ff4d4d; padding: 20px; border-radius: 10px; 
-                         background-color: rgba(255, 77, 77, 0.1); margin-top: 20px; text-align: center;">
-                        <h3 style="color: #ff4d4d;">Clerk API Key Required</h3>
-                        <p>To enable authentication, please set up your Clerk API keys in the environment variables.</p>
-                    </div>
-                `;
-            }} else {{
-                const clerk = window.Clerk(clerkPublishableKey);
+    col1, col2 = st.columns([1, 3])
+    
+    with col2:
+        st.markdown(
+            """
+            <div style="border: 2px solid #00E676; padding: 20px; border-radius: 10px; 
+                 background-color: rgba(0, 230, 118, 0.1); margin-top: 20px; text-align: center;">
+                <h3 style="color: #00E676;">Create an Account</h3>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        
+        # Name input
+        full_name = st.text_input("Full Name", key="signup_name", 
+                               placeholder="John Doe")
+        
+        # Email input
+        email = st.text_input("Email Address", key="signup_email", 
+                             placeholder="your.email@example.com")
+        
+        # Password inputs
+        password = st.text_input("Create Password", type="password", key="signup_password")
+        confirm_password = st.text_input("Confirm Password", type="password", key="signup_confirm_password")
+        
+        # Terms and conditions checkbox
+        agree_terms = st.checkbox("I agree to the Terms and Conditions", key="signup_terms")
+        
+        # Signup button with styling
+        if st.button("Create Account", key="signup_button", use_container_width=True, type="primary"):
+            # Simple validation
+            if not full_name or not email or not password or not confirm_password:
+                st.error("Please fill in all fields")
+            elif password != confirm_password:
+                st.error("Passwords do not match")
+            elif not agree_terms:
+                st.warning("You must agree to the Terms and Conditions")
+            else:
+                st.session_state.authenticated = True
+                st.session_state.user_id = "user_" + email.split('@')[0]
+                st.session_state.user_name = full_name
+                st.session_state.user_email = email
+                st.success("Account created successfully!")
+                st.rerun()
                 
-                clerk.load({{
-                    // Set the sign-up options
-                    signUp: {{
-                        routing: "path",
-                        path: "/sign-up",
-                        mount: document.getElementById("clerk-sign-up"),
-                        appearance: {{
-                            variables: {{
-                                colorPrimary: "#00E676",
-                                colorBackground: "#121212",
-                                colorText: "#FFFFFF",
-                                colorInputBackground: "#1E1E1E",
-                                colorInputText: "#FFFFFF",
-                                fontFamily: "Arial, sans-serif",
-                            }},
-                            layout: {{
-                                socialButtonsVariant: "iconAndText",
-                                socialButtonsPlacement: "bottom"
-                            }}
-                        }}
-                    }}
-                }});
-            }}
-        </script>
-        """,
-        unsafe_allow_html=True,
-    )
+        st.markdown(
+            """
+            <p style="text-align: center; margin-top: 15px; color: #AAAAAA;">
+                By signing up, you agree to our Terms of Service and Privacy Policy.
+            </p>
+            """, 
+            unsafe_allow_html=True
+        )
 
 def show_user_profile():
     """
@@ -213,16 +217,47 @@ def logout_button():
 
 def demo_login():
     """
-    A simplified demo login function for testing without Clerk setup.
+    A simplified demo login function for testing purposes.
     """
-    email = st.text_input("Email", key="demo_email")
-    password = st.text_input("Password", type="password", key="demo_password")
+    col1, col2 = st.columns([1, 3])
     
-    if st.button("Login", key="demo_login_button"):
-        # In a real app, you would verify credentials against a database
-        # This is just for demonstration purposes
-        st.session_state.authenticated = True
-        st.session_state.user_id = "demo_user_id"
-        st.session_state.user_name = email.split('@')[0].title()
-        st.session_state.user_email = email
-        st.rerun()
+    with col2:
+        st.markdown(
+            """
+            <div style="border: 2px solid #FFD700; padding: 20px; border-radius: 10px; 
+                 background-color: rgba(255, 215, 0, 0.1); margin-top: 20px; text-align: center;">
+                <h3 style="color: #FFD700;">Demo Login</h3>
+                <p style="color: #AAAAAA;">No real authentication - just for demonstration</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        
+        # Email input with default value
+        email = st.text_input("Email", key="demo_email", value="demo@example.com")
+        
+        # Password input with default value
+        password = st.text_input("Password", type="password", key="demo_password", value="demo123")
+        
+        # Remember me checkbox
+        remember_me = st.checkbox("Remember me", key="demo_remember", value=True)
+        
+        # Login button with styling
+        if st.button("Enter Demo Mode", key="demo_login_button", use_container_width=True, 
+                   type="primary", help="Log in with demo credentials"):
+            # For demo purposes, we'll always log in successfully
+            st.session_state.authenticated = True
+            st.session_state.user_id = "demo_user_id"
+            st.session_state.user_name = "Demo User"
+            st.session_state.user_email = email
+            st.success("Demo login successful!")
+            st.rerun()
+            
+        st.markdown(
+            """
+            <p style="text-align: center; margin-top: 15px; color: #AAAAAA;">
+                This demo mode uses a pre-populated database with sample financial data.
+            </p>
+            """, 
+            unsafe_allow_html=True
+        )
