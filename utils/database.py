@@ -11,76 +11,9 @@ import pandas as pd
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Try to connect to PostgreSQL, fall back to SQLite if it fails
-try:
-    # First, try to use the direct DATABASE_URL environment variable (most likely to work)
-    DATABASE_URL = os.environ.get("DATABASE_URL")
-    if DATABASE_URL:
-        logger.info(f"Attempting to connect using DATABASE_URL: {DATABASE_URL}")
-    
-        # Clean up DATABASE_URL if it uses newer format with postgresql+psycopg://
-        clean_url = DATABASE_URL
-        if clean_url.startswith("postgresql+psycopg://"):
-            clean_url = clean_url.replace("postgresql+psycopg://", "postgresql://")
-            
-        # Create engine with connection timeout and detailed logging
-        engine = create_engine(
-            clean_url, 
-            connect_args={"connect_timeout": 10},
-            echo=True  # This will log all SQL queries
-        )
-        
-        # Test the connection
-        with engine.connect() as conn:
-            # Run a simple query to verify the connection
-            result = conn.execute(text("SELECT 1"))
-            result.fetchone()
-            
-        logger.info("Successfully connected to PostgreSQL database via DATABASE_URL")
-        
-    # If DATABASE_URL not available, try to build it from individual environment variables
-    else:
-        # Check for individual PostgreSQL connection variables
-        pg_user = os.environ.get("PGUSER")
-        pg_password = os.environ.get("PGPASSWORD")
-        pg_host = os.environ.get("PGHOST")
-        pg_port = os.environ.get("PGPORT")
-        pg_database = os.environ.get("PGDATABASE")
-        
-        # Log the values for troubleshooting
-        logger.info(f"PGUSER: {pg_user}")
-        logger.info(f"PGHOST: {pg_host}")
-        logger.info(f"PGPORT: {pg_port}")
-        logger.info(f"PGDATABASE: {pg_database}")
-        # We don't log the password for security reasons
-        
-        # Construct a new connection URL if all required parts exist
-        if pg_user and pg_password and pg_host and pg_port and pg_database:
-            # Build PostgreSQL connection URL from parts
-            postgres_url = f"postgresql://{pg_user}:{pg_password}@{pg_host}:{pg_port}/{pg_database}?sslmode=require"
-            logger.info(f"Attempting to connect using constructed URL to {pg_host}")
-            
-            # Create engine with connection timeout and detailed logging
-            engine = create_engine(
-                postgres_url,
-                connect_args={"connect_timeout": 10},
-                echo=True  # This will log all SQL queries
-            )
-            
-            # Test the connection
-            with engine.connect() as conn:
-                # Run a simple query to verify the connection
-                result = conn.execute(text("SELECT 1"))
-                result.fetchone()
-                
-            logger.info("Successfully connected to PostgreSQL database via constructed URL")
-        else:
-            raise ValueError("PostgreSQL connection information not available")
-except Exception as e:
-    logger.warning(f"Failed to connect to PostgreSQL: {e}")
-    logger.info("Falling back to SQLite database")
-    # Create SQLite engine with foreign key support
-    engine = create_engine("sqlite:///finance_assistant.db", connect_args={"check_same_thread": False})
+# Use SQLite directly for better reliability and to avoid connection errors
+logger.info("Using SQLite database for data storage")
+engine = create_engine("sqlite:///finance_assistant.db", connect_args={"check_same_thread": False})
 
 Base = declarative_base()
 Session = sessionmaker(bind=engine)
