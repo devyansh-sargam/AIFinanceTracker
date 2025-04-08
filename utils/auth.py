@@ -209,9 +209,13 @@ def logout_button():
         st.session_state.user_name = None
         st.session_state.user_email = None
         
-        # Clear Clerk token from cookies
-        cookie_manager = stx.CookieManager()
-        cookie_manager.delete("__clerk_session_jwt")
+        # Clear Clerk token from cookies (with error handling)
+        try:
+            cookie_manager = stx.CookieManager()
+            if "__clerk_session_jwt" in cookie_manager.cookies:
+                cookie_manager.delete("__clerk_session_jwt")
+        except Exception as e:
+            st.warning(f"Note: Could not clear cookies, but logout was successful.")
         
         st.rerun()
 

@@ -1,0 +1,261 @@
+/* Finance Assistant Custom Animations and Styles */
+
+/* Base Animations */
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+    0% { transform: translateX(-50px); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInRight {
+    0% { transform: translateX(50px); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInUp {
+    0% { transform: translateY(50px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes glow {
+    0% { box-shadow: 0 0 5px rgba(0, 230, 118, 0.5); }
+    50% { box-shadow: 0 0 20px rgba(0, 230, 118, 0.8); }
+    100% { box-shadow: 0 0 5px rgba(0, 230, 118, 0.5); }
+}
+
+@keyframes shimmer {
+    0% { background-position: -1000px 0; }
+    100% { background-position: 1000px 0; }
+}
+
+/* Card Animations */
+.animated-card {
+    animation: fadeIn 0.8s ease-in-out, glow 3s infinite;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.animated-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Button Animations */
+.animated-button {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.animated-button:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: shimmer 2s infinite;
+}
+
+.animated-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 230, 118, 0.4);
+}
+
+/* Chart Animations */
+.animated-chart {
+    animation: fadeIn 1s ease-in-out;
+    transition: transform 0.3s ease;
+}
+
+.animated-chart:hover {
+    transform: scale(1.02);
+}
+
+/* Dashboard Cards */
+.metric-card {
+    padding: 1.5rem;
+    border-radius: 10px;
+    background-color: rgba(30, 30, 30, 0.7);
+    border: 1px solid rgba(0, 230, 118, 0.3);
+    margin-bottom: 1rem;
+    animation: fadeIn 0.8s ease-in-out;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.metric-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 230, 118, 0.2);
+}
+
+.metric-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #00E676;
+    margin-bottom: 0.5rem;
+    animation: slideInRight 0.5s ease-in-out;
+}
+
+.metric-label {
+    font-size: 1rem;
+    color: #AAAAAA;
+    animation: slideInRight 0.7s ease-in-out;
+}
+
+/* Icons */
+.financial-icon {
+    font-size: 2rem;
+    color: #00E676;
+    margin-right: 1rem;
+    animation: pulse 2s infinite;
+}
+
+/* Progress Bars */
+.animated-progress {
+    position: relative;
+    height: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    overflow: hidden;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.animated-progress-bar {
+    height: 100%;
+    border-radius: 5px;
+    background: linear-gradient(90deg, #00E676, #00B0FF);
+    animation: slideInLeft 1s ease-in-out;
+    transition: width 0.5s ease;
+}
+
+/* Form Inputs */
+.animated-input {
+    animation: fadeIn 0.8s ease-in-out;
+    transition: all 0.3s ease;
+}
+
+.animated-input:focus {
+    border-color: #00E676 !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 230, 118, 0.25) !important;
+}
+
+/* Page Transitions */
+.page-transition {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Images and Icons */
+.finance-image {
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.finance-image:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* SVG Icons */
+.svg-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+    transition: transform 0.3s ease;
+}
+
+.svg-icon:hover {
+    transform: scale(1.2);
+}
+
+/* Custom Header */
+.custom-header {
+    background: linear-gradient(90deg, #121212, #1E1E1E);
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(0, 230, 118, 0.3);
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+/* Footer */
+.custom-footer {
+    margin-top: 3rem;
+    text-align: center;
+    padding: 1.5rem;
+    background-color: rgba(30, 30, 30, 0.5);
+    border-top: 1px solid rgba(0, 230, 118, 0.2);
+    animation: slideInUp 0.8s ease-in-out;
+}
+
+/* Tooltips */
+.custom-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-tooltip .tooltip-text {
+    visibility: hidden;
+    width: 120px;
+    background-color: #1E1E1E;
+    color: #FFFFFF;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    border: 1px solid rgba(0, 230, 118, 0.3);
+}
+
+.custom-tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Badges */
+.custom-badge {
+    display: inline-block;
+    padding: 0.35em 0.65em;
+    font-size: 0.75em;
+    font-weight: 700;
+    line-height: 1;
+    color: #FFFFFF;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+    background-color: rgba(0, 230, 118, 0.7);
+    animation: pulse 2s infinite;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #121212;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 230, 118, 0.5);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 230, 118, 0.8);
+}
