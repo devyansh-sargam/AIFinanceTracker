@@ -1,5 +1,6 @@
 import os
 import json
+import logging
 from datetime import datetime
 from sqlalchemy import create_engine, Column, Integer, String, Float, Date, ForeignKey, Text, JSON
 from sqlalchemy.ext.declarative import declarative_base
@@ -8,7 +9,27 @@ import pandas as pd
 
 # Create database connection
 DATABASE_URL = os.environ.get("DATABASE_URL")
-engine = create_engine(DATABASE_URL)
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Try to connect to PostgreSQL, fall back to SQLite if it fails
+try:
+    if DATABASE_URL:
+        logger.info("Attempting to connect to PostgreSQL database")
+        engine = create_engine(DATABASE_URL)
+        # Test the connection
+        with engine.connect() as conn:
+            pass
+        logger.info("Successfully connected to PostgreSQL database")
+    else:
+        raise ValueError("DATABASE_URL environment variable not set")
+except Exception as e:
+    logger.warning(f"Failed to connect to PostgreSQL: {e}")
+    logger.info("Falling back to SQLite database")
+    engine = create_engine("sqlite:///finance_assistant.db")
+
 Base = declarative_base()
 Session = sessionmaker(bind=engine)
 
